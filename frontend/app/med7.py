@@ -7,6 +7,13 @@ from st_ner_annotate import st_ner_annotate
 st.title('Streamlit: Med7 Annotation Site')
 
 
+def disable():
+    st.session_state.disabled = True
+
+if "disabled" not in st.session_state:
+    st.session_state.disabled = False
+
+
 def call_api(option, text):
     with st.spinner("waiting"):
         payload = {"type": option, "text": text}
@@ -21,16 +28,18 @@ def main():
             text = st.text_area(
                 "Text to analyze",
                 "A patient was prescribed Magnesium hydroxide 400mg/5ml suspension PO of total 30ml bid for the next 5 days.",
-                height=300
+                height=300,
+                disabled=st.session_state.disabled
             )
 
             option = st.radio(
                 "Model?",
                 ("med7", "random"),
-                horizontal=True, label_visibility="hidden"
+                horizontal=True, label_visibility="hidden",
+                disabled=st.session_state.disabled
             )
 
-            submitted = st.form_submit_button("Submit")
+            submitted = st.form_submit_button("Submit", on_click=disable, disabled=st.session_state.disabled)
             if submitted:  # Make button a condition.
                 st.cache_data.clear()
                 if option == "random":
