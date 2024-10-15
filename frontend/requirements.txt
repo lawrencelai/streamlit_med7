@@ -1,0 +1,4 @@
+streamlit
+st_ner_annotate
+requests
+caching
